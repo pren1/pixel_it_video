@@ -112,7 +112,7 @@ def merge_into_video(max_size):
 if __name__ == '__main__':
     max_size = 6667
     print("Transferring images...")
-    executor = concurrent.futures.ProcessPoolExecutor(14)
+    executor = concurrent.futures.ProcessPoolExecutor(62)
     futures = [executor.submit(single_processor, i) for
                i in range(max_size)]
     concurrent.futures.wait(futures)

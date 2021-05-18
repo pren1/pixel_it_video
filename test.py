@@ -15,7 +15,7 @@ class handle_palette(object):
         self.image_name = image_name
         self.img = cv2.imread(image_name)
         self.height, self.width, self.channels = self.img.shape
-        self.pixel_square_size = 2
+        self.pixel_square_size = 5
 
     def convertPalette(self):
         scaled_width = math.floor(self.width/self.pixel_square_size)
@@ -110,15 +110,19 @@ def merge_into_video(max_size):
     out.release()
 
 if __name__ == '__main__':
-    max_size = 6667
-    print("Transferring images...")
-    executor = concurrent.futures.ProcessPoolExecutor(1)
-    futures = [executor.submit(single_processor, i) for
-               i in range(max_size)]
-    concurrent.futures.wait(futures)
-    noise_filter(max_size=max_size)
-    merge_into_video(max_size=max_size)
+    # max_size = 6667
+    # print("Transferring images...")
+    # executor = concurrent.futures.ProcessPoolExecutor(1)
+    # futures = [executor.submit(single_processor, i) for
+    #            i in range(max_size)]
+    # concurrent.futures.wait(futures)
+    # noise_filter(max_size=max_size)
+    # merge_into_video(max_size=max_size)
 
+    HP = handle_palette(f"test22.png", paletteList[5])
+    HP.convertPalette()
+    # HP.show_image()
+    cv2.imwrite("res.png", HP.img)
 
 
 

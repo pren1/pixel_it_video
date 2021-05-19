@@ -14,8 +14,9 @@ class handle_palette(object):
         self.palette_list = palette_list
         self.image_name = image_name
         self.img = cv2.imread(image_name)
+        self.unchanged_img = cv2.imread(image_name, cv2.IMREAD_UNCHANGED)
         self.height, self.width, self.channels = self.img.shape
-        self.pixel_square_size = 5
+        self.pixel_square_size = 2
 
     def convertPalette(self):
         scaled_width = math.floor(self.width/self.pixel_square_size)
@@ -26,7 +27,7 @@ class handle_palette(object):
                 image_square = self.img[j*self.pixel_square_size:(j+1)*self.pixel_square_size, i*self.pixel_square_size:(i+1)*self.pixel_square_size]
                 image_mean_color = np.mean(image_square.reshape((-1, 3)), axis=0)
                 rgb_color = self.switch_image_order(image_mean_color)
-                self.img[j*self.pixel_square_size:(j+1)*self.pixel_square_size, i*self.pixel_square_size:(i+1)*self.pixel_square_size] = self.switch_image_order(self.nearby_Color(rgb_color))
+                self.unchanged_img[j*self.pixel_square_size:(j+1)*self.pixel_square_size, i*self.pixel_square_size:(i+1)*self.pixel_square_size][:, :, :3] = self.switch_image_order(self.nearby_Color(rgb_color))
 
     def switch_image_order(self, input_color):
         return np.asarray([input_color[2], input_color[1], input_color[0]])
@@ -48,14 +49,14 @@ class handle_palette(object):
         return np.linalg.norm(rgbColor - compareColor)
 
     def show_image(self):
-        cv2.imshow('img', self.img)
+        cv2.imshow('img', self.unchanged_img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
     def save_image(self):
         if not os.path.exists("target_folder"):
             os.mkdir("target_folder")
-        cv2.imwrite(f"./target_folder/{self.image_name.split('/')[-1]}", self.img)
+        cv2.imwrite(f"./target_folder/{self.image_name.split('/')[-1]}", self.unchanged_img)
 
 def single_processor(i):
     HP = handle_palette(f"./source_folder/frame{i}.jpg", paletteList[5])
@@ -119,10 +120,10 @@ if __name__ == '__main__':
     # noise_filter(max_size=max_size)
     # merge_into_video(max_size=max_size)
 
-    HP = handle_palette(f"test22.png", paletteList[5])
+    HP = handle_palette(f"test42.png", paletteList[5])
     HP.convertPalette()
     # HP.show_image()
-    cv2.imwrite("res.png", HP.img)
+    cv2.imwrite("res.png", HP.unchanged_img)
 
 
 

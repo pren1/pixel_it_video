@@ -16,7 +16,7 @@ class handle_palette(object):
         self.img = cv2.imread(image_name)
         self.unchanged_img = cv2.imread(image_name, cv2.IMREAD_UNCHANGED)
         self.height, self.width, self.channels = self.img.shape
-        self.pixel_square_size = 2
+        self.pixel_square_size = 5
 
     def convertPalette(self):
         scaled_width = math.floor(self.width/self.pixel_square_size)
@@ -120,10 +120,12 @@ if __name__ == '__main__':
     # noise_filter(max_size=max_size)
     # merge_into_video(max_size=max_size)
 
-    HP = handle_palette(f"test42.png", paletteList[5])
-    HP.convertPalette()
-    # HP.show_image()
-    cv2.imwrite("res.png", HP.unchanged_img)
+    root = "/Users/renpeng/Desktop/captions"
+    for i in tqdm(range(17, 18)):
+        HP = handle_palette(f"{root}/{i}.png", paletteList[5])
+        HP.convertPalette()
+        # HP.show_image()
+        cv2.imwrite(f"{root}/{i}_colored.png", HP.unchanged_img)
 
 
 
